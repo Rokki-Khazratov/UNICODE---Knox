@@ -7,4 +7,8 @@ from . import views
 app_name = "knox"
 urlpatterns = [
     path('',views.index, name='index'),
-] + Japan.patterns + Paris.patterns + London.patterns
+] 
+
+urlpatterns += Japan.patterns 
+urlpatterns += London.patterns 
+urlpatterns += Paris.patterns 

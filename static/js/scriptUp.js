@@ -1,8 +1,15 @@
 componentIndex = -1;
 randomId = -1
+divNum = 0;
+
 
 function allowDrop(ev) { ev.preventDefault() }
 function drag(ev) { ev.dataTransfer.setData('text', ev.target.id) }
+
+function del(elem1, elem2){
+  document.getElementById(elem1).remove();
+  document.getElementById(elem2).remove();
+}
 
 function drop(ev, thiss) {
   ev.preventDefault()
@@ -17,48 +24,49 @@ function drop(ev, thiss) {
     document.getElementById('dropper').remove()
     const list2 = document.getElementById(thiss.id)
     const canvasZone = document.getElementById('canvasZone')
-    const hashIndexId = CryptoJS.MD5("" + componentIndex);
+    const d = new Date();
+    const hashIndexId = CryptoJS.MD5("" + d + componentIndex);
 
-
-    // ________________________________________________________________
-
-    modal = `<div class="modal fade" id="modal` + hashIndexId + `" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">`
-
-    modal += componentIndex
-
-    modal += `</div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
-              </div>
-            </div>
-          </div>
-        </div>`
 
 
     // ________________________________________________________________
 
-    buttonEdit = `<span style="z-index: 2; left:64%;" class="position-absolute top-25 translate-middle badge">
-      <button class="btn btn-primary px-5 py-1 rounded-pill bg-gradient text-white" data-bs-toggle="modal" data-bs-target="#modal`+ hashIndexId + `">Edit</button>
+    buttonEdit = `<span id="removed" style="z-index: 2; left:64%;" class="position-absolute top-25 translate-middle badge">
+      <button class="py-0 h6 px-5 rounded-pill btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#modal`+ hashIndexId + `" aria-controls="offcanvasExample">Edit</button>
       <span class="visually-hidden">unread messages</span>
     </span>
   </div>`
 
     // ________________________________________________________________
 
+    modal = `<div class="offcanvas offcanvas-start" style="width: 28%;" tabindex="-1" id="modal` + hashIndexId + `"  data-bs-scroll="true" data-bs-backdrop="false" tabindex="-1"  aria-labelledby="offcanvasScrollingLabel">
+              <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasExampleLabel">Offcanvas</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+              </div>
+              <div class="offcanvas-body">`
+
+
     const editHtml = canvasZone.innerHTML + `<div id="component-` + hashIndexId + `"><content id="contend-` + hashIndexId + `">` + list1.getAttribute('html') + `</content>` + buttonEdit;
     canvasZone.innerHTML = editHtml + dropper
 
     text = ""
     getChild(`contend-` + hashIndexId)
-    alert(text)
+    console.log(text)
+
+    modal += text
+
+
+    modal += `<button class="btn btn-danger" onclick="del('modal` + hashIndexId + `', 'component-` + hashIndexId + `')">Delete</button>`
+
+    modal += `
+    </div>
+  </div>`
+
+
+    // ________________________________________________________________
+
+
 
     const modalsSection = document.getElementById('modals').innerHTML;
     document.getElementById('modals').innerHTML = modalsSection + modal;
@@ -69,27 +77,77 @@ function drop(ev, thiss) {
   }
 }
 
-  
+function changeInp(id, inpid) {
+  document.getElementById(id).innerHTML = document.getElementById(inpid).value
+  document.getElementById(inpid).setAttribute("value", document.getElementById(inpid).value);
+}
+
+function changeInpImg(id, inpid) {
+  document.getElementById(id).src = document.getElementById(inpid).value
+  document.getElementById(inpid).setAttribute("value", document.getElementById(id).src);
+}
+
+function changeInput(id, inpid) {
+  document.getElementById(id).placeholder = document.getElementById(inpid).value
+  document.getElementById(inpid).setAttribute("value", document.getElementById(id).placeholder);
+}
+
+function changeInputHref(id, inpid) {
+  document.getElementById(id).setAttribute("href", document.getElementById(inpid).value);
+  document.getElementById(inpid).setAttribute("value", document.getElementById(id).getAttribute('href'));
+}
+
+
 function getChild(divId) {
-  const htmlNowDragObj = document.getElementById(divId).children;
-  for (let i = 0; i < htmlNowDragObj.length; i++) {
-    text += htmlNowDragObj[i].tagName + ">";
-    console.log(htmlNowDragObj[i].children)
-    childs = htmlNowDragObj[i].children;
-    if (childs.length > 0) {
-      for (let j = 0; j < childs.length; j++) {
-        if(childs[j].id == ''){
-          childs[j].id = randomIdFun();
-          getChild(childs[j].id);
-        }
-        else
-          getChild(childs[j].id);
-      }
+  const childs = document.getElementById(divId).children;
+  divNum += 1;
+  for (let i = 0; i < childs.length; i++) {
+    if (childs[i].id == '') {
+      childs[i].id = randomIdFun();
     }
+    getChild(childs[i].id);
+  }
+  const tn = document.getElementById(divId).tagName
+  if (tn == 'P' || tn == 'H1' || tn == 'H2' || tn == 'H3' || tn == 'H4' || tn == 'H5' || tn == 'H6' || tn == 'BUTTON') {
+    innerhtm = document.getElementById(divId);
+    text += `<div class="input-group input-group-sm mb-3">
+    <span class="input-group-text bg-info text-light" id="basic-addon1">` + tn + `</span>
+    <input class="form-control" aria-describedby="basic-addon1" id="`+ `input` + innerhtm.id + `" type="text" value='` + innerhtm.innerHTML + `' onchange="changeInp('` + innerhtm.id + `', 'input` + innerhtm.id + `')">
+  </div>`;
+  } else if (tn == 'IMG') {
+    innerhtm = document.getElementById(divId);
+    text += `<div class="input-group mb-3">
+    <span class="input-group-text bg-success text-light" id="basic-addon1">` + tn + `</span>
+    <input class="form-control" aria-describedby="basic-addon1" id="`+ `input` + innerhtm.id + `" type="text" value='` + innerhtm.getAttribute('src') + `' onchange="changeInpImg('` + innerhtm.id + `', 'input` + innerhtm.id + `')">
+    </div>`;
+  }else if (tn == 'INPUT') {
+    innerhtm = document.getElementById(divId);
+    text += `<div class="input-group mb-3">
+    <span class="input-group-text bg-warning text-light" id="basic-addon1">` + tn + `</span>
+    <input class="form-control" aria-describedby="basic-addon1" id="`+ `input` + innerhtm.id + `" type="text" value='` + innerhtm.placeholder + `' onchange="changeInput('` + innerhtm.id + `', 'input` + innerhtm.id + `')">
+    </div>`;
+  }else if (tn == 'A') {
+    innerhtm = document.getElementById(divId);
+    text += `<div class="input-group mb-3">
+    <span class="input-group-text bg-primary text-light" id="basic-addon1">` + tn + `</span>
+      <input type="text" aria-label="First name" class="form-control"
+      id="input` + innerhtm.id + `" 
+      type="text" 
+      value='` + innerhtm.innerHTML + `' 
+      onchange="changeInp('` + innerhtm.id + `', 'input` + innerhtm.id + `')">
+
+      <input type="text" aria-label="Last name" class="form-control"
+      id="`+ `input1` + innerhtm.id + `" 
+      type="text" 
+      value='` + innerhtm.getAttribute('href') + `' 
+      onchange="changeInputHref('` + innerhtm.id + `', 'input1` + innerhtm.id + `')">
+
+    </div>`;
   }
 }
 
-function randomIdFun(){
-  randomId ++;
-  return CryptoJS.MD5("id" + randomId);
+function randomIdFun() {
+  randomId++;
+  const d = new Date();
+  return CryptoJS.MD5("id" + d + randomId);
 }

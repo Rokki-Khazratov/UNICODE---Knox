@@ -7,7 +7,19 @@
 
 {% block content %} 
 
-<script src="{% static 'media/js/scriptUp.js' %}"></script>
+<style>
+  .selector  {
+    user-drag: none; 
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    pointer-events: none;
+  }
+</style>
+
+<script src="{% static 'js/scriptUp.js' %}"></script>
 
   <div>
     <div class="d-flex flex-nowrap">
@@ -17,10 +29,8 @@
             
           <form action="site-register" method="post" id="export-form">
             {% csrf_token %}
-            <input type="hidden" name="header" value="PCFET0NUWVBFIGh0bWw+PGh0bWwgbGFuZz0iZW4iPjxoZWFkPjxtZXRhIGNoYXJzZXQ9IlVURi04Ij48dGl0bGU+S25veDwvdGl0bGU+PGxpbmsgcmVsPSJzdHlsZXNoZWV0IiBocmVmPSJodHRwczovL2Nkbi5qc2RlbGl2ci5uZXQvbnBtL2Jvb3RzdHJhcEA1LjIuMi9kaXN0L2Nzcy9ib290c3RyYXAubWluLmNzcyI+PC9oZWFkPjxib2R5PjxzY3JpcHQgdHlwZT0idGV4dC9qYXZhc2NyaXB0InNyYz0iaHR0cDovL2FqYXguZ29vZ2xlYXBpcy5jb20vYWpheC9saWJzL2pxdWVyeS8xLjguMy9qcXVlcnkubWluLmpzIj48L3NjcmlwdD4=" />
-            <input type="hidden" name="footer" value="PHNjcmlwdCBzcmM9Imh0dHBzOi8vY2RuLmpzZGVsaXZyLm5ldC9ucG0vYm9vdHN0cmFwQDUuMi4yL2Rpc3QvanMvYm9vdHN0cmFwLm1pbi5qcyI+PC9zY3JpcHQ+PHNjcmlwdCBzcmM9Imh0dHBzOi8vY2RuLmpzZGVsaXZyLm5ldC9ucG0vYm9vdHN0cmFwQDUuMi4yL2Rpc3QvanMvYm9vdHN0cmFwLmJ1bmRsZS5taW4uanMiPjwvc2NyaXB0PjxzY3JpcHQgc3JjPSJodHRwczovL2dldGJvb3RzdHJhcC5jb20vZG9jcy81LjIvZXhhbXBsZXMvc2lkZWJhcnMvc2lkZWJhcnMuanMiPjwvc2NyaXB0PjwvYm9keT48L2h0bWw+" />
-            <input id="username" name="username" type="hidden"placeholder="Username" value="{{ userole }}" />
-            <input id="value" name="value" type="hidden" placeholder="Value" />
+            <input id="value" name="value" type="hidden" />
+            <input id="modal" name="modal" type="hidden" />
             <input type="hidden" id="submit-btn" />
           </form>
 
@@ -31,8 +41,9 @@
 
               <script>
                 var form = document.getElementById("export-form");
-
                 document.getElementById("export-btn").addEventListener("click", function () {
+                  document.getElementById('value').value = document.getElementById('canvasZone').innerHTML
+                  document.getElementById('modal').value = document.getElementById('modals').innerHTML
                   form.submit();
                 });
               </script>
@@ -45,22 +56,13 @@
 
 
           <div class="dropdown border-top">
-            <a href="#" class="d-flex align-items-center justify-content-center p-3 link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><img src="https://i.pinimg.com/originals/71/ac/a3/71aca3fd61f65676083c5420d9727a12.jpg" alt="mdo" width="24" height="24" class="rounded-circle" /></a>
+            <a href="#" class="d-flex align-items-center justify-content-center p-3 link-dark text-decoration-none dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"><img src="https://emojipedia-us.s3.amazonaws.com/source/microsoft-teams/337/bust-in-silhouette_1f464.png" alt="mdo" width="48" height="48" /></a>
             <ul class="dropdown-menu text-small shadow">
               <li>
-                <a class="dropdown-item" href="#">New project...</a>
+                <a class="dropdown-item" href="/{{ user.username }}">My Site</a>
               </li>
               <li>
-                <a class="dropdown-item" href="#">Settings</a>
-              </li>
-              <li>
-                <a class="dropdown-item" href="#">Profile</a>
-              </li>
-              <li>
-                <hr class="dropdown-divider" />
-              </li>
-              <li>
-                <a class="dropdown-item" href="#">Sign out</a>
+                <a class="dropdown-item" href="/profile">Profile</a>
               </li>
             </ul>
           </div>
@@ -139,27 +141,32 @@
         
         components();
       </script>
+      <div  style="width:72%; margin: 0; margin-left: auto;">
+        <div id="canvasZone">
+          {{ defHtml | safe}}
+        </div>
 
-      <div style="width:72%; margin: 0; margin-left: auto;" id="canvasZone">
-        <div ondrop="drop(event,this)" ondragover="allowDrop(event)" id="dropper">
-          <div class="px-5 py-5 text-center">
-            <div class="px-2 py-3 rounded-4 border-3 border-primary" style="border-style: dashed;">
-              <img class="d-block mx-auto mb-4" src="https://getbootstrap.com/docs/5.2/assets/brand/bootstrap-logo.svg" alt="" width="72" height="57" />
-              <h1 class="display-5 fw-bold">Drop here</h1>
-              <div class="col-lg-6 mx-auto">
-                <p class="lead mb-4">Quickly design and customize responsive mobile-first sites with Bootstrap, the world’s most popular front-end open source toolkit, featuring Sass variables and mixins, responsive grid system, extensive prebuilt components, and powerful JavaScript plugins.</p>
-                <div class="d-grid gap-2 d-sm-flex justify-content-sm-center">
-                  <button type="button" class="btn btn-primary btn-lg px-4 gap-3">Primary button</button>
-                  <button type="button" class="btn btn-outline-secondary btn-lg px-4">Secondary</button>
-                </div>
-              </div>
-            </div>
-          </div>
+        <style>
+          .centered {
+            position: absolute;
+            top: 15px;
+            left: 90px;
+          }
+          .ads{
+            position: relative;
+            text-align: center;
+            color: white;
+          }
+        </style>
+        
+        <div class="ads selector">
+          <img src="https://picsum.photos/1400/200" class="img-fluid m-5 mt-0 rounded-4 " alt="ADS">
+          <div class="centered bg-primary rounded p-1 px-2">A text ad is a form of marketing communication</div>
         </div>
       </div>
     </div>
   </div>
   
-  <div id="modals"></div>
+  <div id="modals">{{ modal | safe }}</div>
 
 {% endblock %}

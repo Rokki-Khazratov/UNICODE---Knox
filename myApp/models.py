@@ -16,7 +16,7 @@ class Users (models.Model) :
    data = models.DateField(blank=True)
    
 class Tags (models.Model) :
-   image = models.ImageField( upload_to = "myApp/static/tags/", null=True, blank=True)
+   image = models.ImageField( upload_to = "static/tags/", null=True, blank=True)
    title = models.CharField(max_length=250)
    slug = models.SlugField(unique=True, null=True)
    paragraph = models.TextField(blank=True)
@@ -28,7 +28,7 @@ for i in json.loads(serializers.serialize("json", Tags.objects.all())):
    COLOR_CHOICES += (i['fields']['slug'], i['fields']['slug']),
 
 class Components (models.Model) :
-   image = models.ImageField( upload_to = "myApp/static/components/", null=True, blank=True)
+   image = models.ImageField( upload_to = "static/components/", null=True, blank=True)
    title = models.CharField(max_length=250)
    slug = models.SlugField(unique=True, null=True)
    order = models.CharField(max_length=25)
@@ -41,6 +41,7 @@ class Site (models.Model) :
    title = models.CharField(max_length=250)
    slug = models.SlugField(unique=True, null=True)
    html = models.TextField(blank=True)
+   modal = models.TextField(blank=True)
    user = models.CharField(blank=True, max_length=250)
 
 def __str__(self):

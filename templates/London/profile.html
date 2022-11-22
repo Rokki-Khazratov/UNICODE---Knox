@@ -244,51 +244,15 @@
             <div class="col-md-8 row mr-2">
                 <div class="card-my-face mb-3">
                     <div class="card-body col-12">
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">Full Name</h6>
+                        <div class="form-floating mb-3">
+                          </div>
+                        <form class="form-horizontal input-group mb-3" action="/view/" method="post">
+                            {% csrf_token %}
+                            <div class="input-group mb-3">
+                                <input name="search" type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="button-addon2">
+                                <button type="submit" class="btn btn-outline-secondary" type="button" id="button-addon2">Button</button>
                             </div>
-                            <div class="col-sm-9 text-secondary">
-                                <?php echo $book['name']; ?>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">Email</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary">
-                                <?php echo $book['email']; ?>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">Mobile</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary">
-                                <?php echo $book['number']; ?>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">Address</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary">
-                                <?php echo $book['address']; ?>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row">
-                            <div class="col-sm-3">
-                                <h6 class="mb-0">{{ user.info }}</h6>
-                            </div>
-                            <div class="col-sm-9 text-secondary">
-                                <?php echo $book['info']; ?>
-                            </div>
-                        </div>
-                        <hr>
+                        </form>
                     </div>
                 </div>
 
@@ -329,56 +293,6 @@
     </div>
     <hr>
 </div>
-
-
-<div class="modal fade " id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Ishtirokchilar</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Username</th>
-                        <th scope="col">Email</th>
-                        <th scope="col">Number</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <?php
-                    $result = json_decode($resultByEmail2->users, true);
-                    $id2 = 1;
-                    foreach ($result as $row) {
-                        $userInfo = R::findOne('users', 'id = ?', array($row));
-                        echo '
-            <tr>
-                <th scope="row">' . $id2 . '</th>
-                <td>
-                    <a href="?user='.$userInfo->username.'"  class="text-reset">
-                        ' . $userInfo->username . '
-                    </a>
-                </td>
-                <td>' . $userInfo->email . '</td>
-                <td>' . $userInfo->number . '</td>
-            </tr>';$id2 ++;
-                    }
-                    ?>
-                    </tbody>
-                </table>
-
-                <p>Iltimos <a href="https://knox.uz/doc.html"  class="text-reset" >shartlar</a> bilan tanishib chiqishingizni surab qolamiz </p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 
 <style>
 
